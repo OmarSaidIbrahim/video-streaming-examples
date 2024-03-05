@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Video Streaming With Node</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-black text-2xl">
+        <div class="flex flex-col">
+            <div class="flex justify-between items-start w-full px-[4.5rem] pt-[2.5rem]">
+                <div>
+                    <div id="latency" class="mb-[4.5rem]">
+                    </div>
+                    <div class="flex items-center justify-between w-[500px] mb-4">
+                        <p class="text-white">Select Video:</p>
+                        <select id="videoId" onchange="onChangeVideo()">
+                            <option value="6624849">Video 1</option>
+                            <option value="6251859">Video 2</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between w-[500px]">
+                        <p class="text-white">Select Quality:</p>
+                        <select id="videoQuality" onchange="onChangeVideoQuality()">
+                            <option value="sd">SD</option>
+                            <option value="hd">HD</option>
+                            <option value="hls">Full HD</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="currentVideoDetails"></div>
+            </div>
+            <div class="flex">
+                <div class="flex flex-col w-full px-[4.5rem] py-[2.5rem]">
+                    <p class="text-white mb-[3rem]">Server</p>
+                    <div class="flex justify-between items-center">
+                        <div class="flex flex-col items-start gap-4">
+                            <p class="text-white">With streaming</p>
+                            <video id="videoPlayer1" controls muted="muted" autoplay class="w-[300px] h-[500px] object-cover">
+                                <source src="/media-with-streaming" type="video/mp4">
+                            </video>
+                            <p id="loadingTime1" class="text-white whitespace-pre-line"></p>
+                        </div>
+                        <div class="flex flex-col items-start gap-4">
+                            <p class="text-white">Without streaming</p>
+                            <video id="videoPlayer2" controls muted="muted" autoplay class="w-[300px] h-[500px] object-cover"></video>
+                            <p id="loadingTime2" class="text-white whitespace-pre-line"></p>
+                            <script>
+                                fetch('/media')
+                                    .then(response => response.text())
+                                    .then(videoUrl => {
+                                        document.getElementById('videoPlayer2').src = videoUrl;
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col w-full px-[4.5rem] py-[2.5rem]">
+                    <p class="text-white mb-[3rem]">Local</p>
+                    <div class="flex justify-between items-center">
+                        <div class="flex flex-col items-start gap-4">
+                            <p class="text-white">With streaming</p>
+                            <video id="videoPlayer3" controls muted="muted" autoplay class="w-[300px] h-[500px] object-cover">
+                                <source src="/video-with-streaming" type="video/mp4">
+                            </video>
+                            <p id="loadingTime3" class="text-white whitespace-pre-line"></p>
+                        </div>
+                        <div class="flex flex-col items-start gap-4">
+                            <p class="text-white">Without streaming</p>
+                            <video id="videoPlayer4" controls muted="muted" autoplay class="w-[300px] h-[500px] object-cover">
+                                <source src="/video" type="video/mp4">
+                            </video>
+                            <p id="loadingTime4" class="text-white whitespace-pre-line"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            // Function to measure loading time for a video player
+            function measureLoadingTime(videoId, loadingTimeDisplayId) {
+                // Start time measurement when the page starts loading
+                var startTime = window.performance.now();
+
+                // Get the video element
+                var video = document.getElementById(videoId);
+
+                // Define a function to display the loading time
+                function displayLoadingTime(loadTime) {
+                    var loadTimeInSeconds = (loadTime / 1000).toFixed(2);
+                    document.getElementById(loadingTimeDisplayId).textContent = `Video loading time: \r\n${loadTimeInSeconds} seconds`;
+                }
+
+                // Add event listener for the 'canplaythrough' event
+                video.addEventListener('canplaythrough', function () {
+                    // End time measurement when the video can play through
+                    var endTime = window.performance.now();
+                    var loadTime = endTime - startTime;
+                    displayLoadingTime(loadTime);
+                }, false);
+            };
+
+            function setOptions() {
+                var urlParams = new URLSearchParams(window.location.search);
+                var videoId = urlParams.get('videoId');
+                var videoQuality = urlParams.get('videoQuality');
+                if (videoId) {
+                    document.getElementById('videoId').value = videoId;
+                }
+                if (videoQuality) {
+                    // Assuming you have an element with id "videoQuality"
+                    document.getElementById('videoQuality').value = videoQuality;
+                }
+            };
+
+            function fetchVideoDetails() {
+                fetch(`/getVideoDetails?videoId=${1}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById("currentVideoDetails").innerHTML = data;
+                    })
+            }
+
+            function fetchLatency() {
+                fetch('/setLatency')
+                fetch('/getLatency')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById("latency").innerHTML = data;
+                    })
+            }
+
+            function onChangeVideoQuality() {
+                var videoId = document.getElementById("videoId").value;
+                var videoQuality = document.getElementById("videoQuality").value;
+                document.location.href = `?videoId=${videoId}&videoQuality=${videoQuality}`
+            }
+        
+            function onChangeVideo() {
+                var videoId = document.getElementById("videoId").value;
+                var videoQuality = document.getElementById("videoQuality").value;
+                document.location.href = `?videoId=${videoId}&videoQuality=${videoQuality}`
+            }
+
+            measureLoadingTime('videoPlayer1', 'loadingTime1');
+            measureLoadingTime('videoPlayer2', 'loadingTime2');
+            measureLoadingTime('videoPlayer3', 'loadingTime3');
+            measureLoadingTime('videoPlayer4', 'loadingTime4');
+
+            // Call the function for each video player
+            window.addEventListener("load", function () {
+                fetchLatency();
+                fetchVideoDetails();
+                setOptions();
+            }, false);
+        </script>
+    </body>
+</html>
