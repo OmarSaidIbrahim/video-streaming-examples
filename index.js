@@ -137,8 +137,7 @@ async function getVideo(id) {
       `https://api.pexels.com/videos/videos/${id}`,
       {
         headers: {
-          Authorization:
-            "n9upBDJQriTRZ730MLHDxg8974uzKH0pLDusUSl6kw5mXXyGusPrz7SC",
+          Authorization: process.env.PEXELS_API_KEY,
         },
       }
     );
