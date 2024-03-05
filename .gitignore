@@ -131,3 +131,6 @@ dist
 
 # videos
 *.mp4
+
+# DS Store
+.DS_Store
