@@ -63,7 +63,7 @@ node index.js
 
 In the code you will find a very ugly piece that you may not understand. 
 
-```
+```javascript
 videoUrl = video.video_files.find((v) => v.quality === videoQuality)?.link;
   if (!videoUrl && videoQuality === "hls") {
     videoUrl = video.video_files.find(
