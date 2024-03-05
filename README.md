@@ -1,4 +1,4 @@
-**"video-streaming-examples"**
+#**video-streaming-examples**
 
 Welcome to the "video-streaming-examples" repository! This project serves as a comprehensive exploration into the mechanics of video streaming technology using JavaScript and Node.js. It showcases various scenarios related to video streaming, including streaming from remote and local servers, loading videos without streaming, and more. Each scenario is meticulously coded to demonstrate the nuances of video streaming, such as latency impact and time to availability for users.
 
