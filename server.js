@@ -10,6 +10,7 @@ let videoQuality = "sd";
 let latency;
 
 app.use(responseTime());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", async function (req, res) {
   let videoId = req?.query?.videoId;
@@ -36,7 +37,7 @@ app.get("/", async function (req, res) {
       )?.link;
     }
   }
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(__dirname + "public/index.html");
 });
 
 app.get("/getVideoDetails", async function (req, res) {
