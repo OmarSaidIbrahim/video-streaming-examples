@@ -36,7 +36,7 @@ app.get("/", async function (req, res) {
       )?.link;
     }
   }
-  res.sendFile(__dirname + "index.html");
+  res.sendFile(__dirname + "public/index.html");
 });
 
 app.get("/getVideoDetails", async function (req, res) {
