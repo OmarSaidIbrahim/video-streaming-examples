@@ -92,32 +92,41 @@ app.get("/media", async (req, res) => {
 });
 
 app.get("/media-with-streaming", async (req, res) => {
-  try {
-    const response = await axios({
-      method: "GET",
-      url: videoUrl,
-      responseType: "stream",
-    });
+  if (
+    await checkFileExists(__dirname + `/saved/${video?.id}_${videoQuality}.mp4`)
+  ) {
+    res.sendFile(__dirname + `/${video?.id}_${videoQuality}.mp4`);
+  } else {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: videoUrl,
+        responseType: "stream",
+      });
 
-    // You can also save it to a file if needed
-    // response.data.pipe(fs.createWriteStream("2499611.mp4"));
+      response.data.pipe(
+        fs.createWriteStream(
+          __dirname + `/saved/${video.id}_${videoQuality}.mp4`
+        )
+      );
 
-    res.setHeader("Content-Type", "video/mp4");
+      res.setHeader("Content-Type", "video/mp4");
 
-    response.data.on("data", (chunk) => {
-      res.write(chunk); // Write each chunk to the response stream
-    });
+      response.data.on("data", (chunk) => {
+        res.write(chunk); // Write each chunk to the response stream
+      });
 
-    response.data.on("end", () => {
-      res.end(); // End the response stream when all data has been sent
-    });
+      response.data.on("end", () => {
+        res.end(); // End the response stream when all data has been sent
+      });
 
-    response.data.on("error", (error) => {
-      console.error("Error streaming video:", error);
-      res.status(500).send("Error streaming video");
-    });
-  } catch (error) {
-    console.error("Error downloading video:", error);
+      response.data.on("error", (error) => {
+        console.error("Error streaming video:", error);
+        res.status(500).send("Error streaming video");
+      });
+    } catch (error) {
+      console.error("Error downloading video:", error);
+    }
   }
 });
 
@@ -174,6 +183,15 @@ const getSize = () => {
           return "398.6";
       }
     }
+  }
+};
+
+const checkFileExists = async (filePath) => {
+  try {
+    await fs.promises.access(filePath, fs.constants.F_OK);
+    return true;
+  } catch {
+    return false;
   }
 };
 
