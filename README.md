@@ -87,7 +87,7 @@ This is because Pexels API does not return the 'hls' quality video on their JSON
 
 # **Plans For The Future**
 
-I am planning to improve the UI and include a video compression functionality to see how that could improve the speed of the streaming. Also, would be great to see how the loading speed changes for larger videos but lower resolution set by the user. 
+I am planning to improve the UI and include a video compression functionality to see how that could improve the speed of the streaming. Also, would be great to see how the loading speed changes for larger videos but lower resolution set by the user. For caching the video chunks streamed, could be helpful to implement a caching system using Redis ?
 
 Feel free to modify the code, experiment with different scenarios, and contribute to the project! If you encounter any issues or have suggestions for improvement, please don't hesitate to open an issue or submit a pull request.
 
