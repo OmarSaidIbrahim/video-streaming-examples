@@ -51,7 +51,7 @@ You can either paste it in the .env file or execute this command in the terminal
 export PEXELS_API_KEY=myapikey
 ```
 
-6. Run the index.js file:
+6. Run the server.js file:
 
 ```bash
 node index.js
