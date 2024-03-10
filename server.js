@@ -29,8 +29,9 @@ app.get("/", async function (req, res) {
 
   if (!videoUrl && videoQuality === "hls") {
     videoUrl = video.video_files.find(
-      (v) => (v.width === 1080 || v.width === 2048) &&
-             (v.height === 1920 || v.height === 1080)
+      (v) =>
+        (v.width === 1080 && v.height === 1920) ||
+        (v.width === 2048 && v.height === 1080)
     )?.link;
   }
   res.sendFile(__dirname + "/public/index.html");
