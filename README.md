@@ -25,6 +25,7 @@ cd video-streaming-examples
 ```bash
 npm install
 ```
+
 4. Download these videos for free from Pexels:
 
 https://www.pexels.com/video/alps-and-hills-drone-footage-6251859/ <br />
@@ -42,12 +43,13 @@ You will need the SD, HD and Full HD versions. In total 6 videos (3 for each lin
 6624849_hd.mp4 <br />
 6624849_hls.mp4 <br />
 
-6. Request an API key from Pexels here 
+6. Request an API key from Pexels here
 
 https://www.pexels.com/api/
 
 You can either paste it in the .env file or execute this command in the terminal before running the index.js file
-```bash 
+
+```bash
 export PEXELS_API_KEY=myapikey
 ```
 
@@ -63,20 +65,18 @@ node index.js
 
 # **Notes**
 
-In the code, you will find a very ugly piece that you may not understand. 
+In the code, you will find a very ugly piece that you may not understand.
 
 ```javascript
 videoUrl = video.video_files.find((v) => v.quality === videoQuality)?.link;
-  if (!videoUrl && videoQuality === "hls") {
-    videoUrl = video.video_files.find(
-      (v) => v.width === 1080 && v.height === 1920
-    )?.link;
-    if (!videoUrl) {
-      videoUrl = video.video_files.find(
-        (v) => v.width === 2048 && v.height === 1080
-      )?.link;
-    }
-  } 
+
+if (!videoUrl && videoQuality === "hls") {
+  videoUrl = video.video_files.find(
+    (v) =>
+      (v.width === 1080 && v.height === 1920) ||
+      (v.width === 2048 && v.height === 1080)
+  )?.link;
+}
 ```
 
 This is because Pexels API does not return the 'hls' quality video on their JSON response, so I had to work around and play with the resolutions.
